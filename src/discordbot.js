@@ -29,8 +29,8 @@ ws.on('open', () => {
 		
 		const command = args.shift().toLowerCase();
 
-		message.channel.send(`args: ${args}`);
-		message.channel.send(`command: ${command}`);
+		//message.channel.send(`args: ${args}`);
+		//message.channel.send(`command: ${command}`);
 
 		if (!(command === "dig" || command === "move")) return;
 
@@ -43,9 +43,9 @@ ws.on('open', () => {
 });
 
 ws.on('message', (message) => {
-	if (lastMessage) {
-		lastMessage.channel.send(message);
-	}
+	// if (lastMessage) {
+	// 	lastMessage.channel.send(message);
+	// }
 });
 
 client.login(process.env.TOKEN);

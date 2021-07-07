@@ -4,9 +4,11 @@ const Discord = require('discord.js');
 
 const client = new Discord.Client();
 
-const ws = new WebSocket('ws://localhost:8080?bot=true&id=8080');
+const ws = new WebSocket('ws://localhost:8080?bot=true&id=7370');
 
 const prefix = "cc"
+
+let lastMessage;
 
 require('dotenv').config();
 
@@ -16,6 +18,9 @@ client.on('ready', () => {
 
 ws.on('open', () => {
 	client.on('message', message => {
+
+		lastMessage = message;
+
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 		const transfer_copy = message.content.slice(prefix.length).trim();
@@ -34,11 +39,13 @@ ws.on('open', () => {
 
 		ws.send(transfer_copy);
 	});
-	ws.send('discord hello.')
+	// ws.send('discord hello.')
 });
 
-ws.on('message', () => {
-	
+ws.on('message', (message) => {
+	if (lastMessage) {
+		lastMessage.channel.send(message);
+	}
 });
 
 client.login(process.env.TOKEN);

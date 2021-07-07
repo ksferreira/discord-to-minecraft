@@ -1,7 +1,7 @@
-os.loadAPI('./api/json')
+os.loadAPI("api/json.lua")
 
 local id = os.getComputerID()
-local connURL = "localhost:8080/?bot=fale&id=" .. id
+local connURL = "localhost:8080/?bot=false&id=" .. id
 
 local ws, err = http.websocket(connURL)
 
@@ -9,42 +9,56 @@ if not ws then
 	print(err)
 end
 
-ws.send("CC TEST")
-
 local move_table = {
-	["up"] = function(X) print("up") end,
-	["forward"] = function(X) print("forward") end,
-	["left"] = function(X) print("left") end,
-	["right"] = function(X) print("right") end
+	["up"] = function(X) turtle.up() end,
+	["down"] = function(X) turtle.down() end,
+	["forward"] = function(X) turtle.forward() end,
+	["back"] = function (X) turtle.back() end,
+	["left"] = function(X) turtle.turnLeft() end,
+	["right"] = function(X) turtle.turnRight() end
 }
 
 local dig_table = {
-	["up"] = function(X) print("dig up") end,
-	["down"] = function(X) print("dig down") end,
-	["forward"] = function(X) print("dig forward") end
+	["up"] = function(X) turtle.digUp() end,
+	["down"] = function(X) turtle.digDown() end,
+	["forward"] = function(X) turtle.dig() end
 }
 
-move_table["up"]()
-
 while true do
-	local _, url, response = os.pullEvent("websocket_message")
+	local event, url, response = os.pullEventRaw()
 
-	if url == connURL then
-		assert(response == "WS TEST", "Didn't receive test, instead: " .. response)
+	if event == "websocket_message" then
 
-		-- ws.close()
-		-- break
+		print(response)
+
+		if url == connURL then
+			
+			local obj = json.decode(response)
+			
+			if obj ~= nil then
+				local action = obj.action
+				local dir = obj.direction
+
+				print("Action: " .. action)
+				print("Direction: " .. dir)
+		
+				if action == "move" then
+					move_table[dir]()
+					print("Moving " .. dir)
+				elseif action == "dig" then
+					dig_table[dir]()
+					print("Digging " .. dir)
+				end
+			end
+
+		end
+
+		
+
+	elseif event == "terminate" then
+		ws.close()
+		return
 	end
-
-	local obj = json.decode(response)
-	local action = obj.action
-	local dir = obj.direction
-
-	if action == "move" then
-		move_table[dir]()
-	elseif action == "dig" then
-		dig_table[dir]()
-
 end
 
 

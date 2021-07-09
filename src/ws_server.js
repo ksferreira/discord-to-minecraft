@@ -5,7 +5,6 @@
 
 const Websocket = require('ws');
 const url = require('url');
-const { dir } = require('console');
 
 let paired = false;
 

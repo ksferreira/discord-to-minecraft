@@ -4,11 +4,9 @@
 // Check performance of lua matching 
 
 const Websocket = require('ws');
-const express = require('express');
 const url = require('url');
 const { dir } = require('console');
 
-const app = express();
 let paired = false;
 
 const actionList  = ['dig', 'move'];

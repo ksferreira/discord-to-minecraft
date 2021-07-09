@@ -27,3 +27,4 @@ Afterwards you can paste *CCBot.lua* into ComputerCraft's files directly **or** 
 Alternatively, you can just change the first line of CCBot.lua to the pathfile of json.lua
 
 ## This was tested using CC: Tweaked on Minecraft 1.12.2, theoretically this should be fine on other versions of Minecraft, as well as vanilla ComputerCraft.
+Built using the MIT License, feel free to change the code and mess around with it!
